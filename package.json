@@ -1,0 +1,13 @@
+{
+  "name": "multi-agent-onboarding-reviewer",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @reviewer/api\" \"npm run dev -w @reviewer/web\"",
+    "build": "npm run build -w @reviewer/api && npm run build -w @reviewer/web",
+    "start": "npm run start -w @reviewer/api",
+    "test": "npm test -w @reviewer/api",
+    "seed": "npm run seed -w @reviewer/api"
+  },
+  "devDependencies": { "concurrently": "^9.1.2" }
+}

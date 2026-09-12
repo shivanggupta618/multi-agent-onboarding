@@ -1,0 +1,25 @@
+{
+  "name": "@reviewer/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node dist/index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "seed": "tsc && node dist/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "sql.js": "^1.13.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/sql.js": "^1.4.9",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.7"
+  }
+}
