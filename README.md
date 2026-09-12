@@ -6,26 +6,30 @@ This implementation uses a deterministic agent engine with typed Zod contracts. 
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start & Evaluator Instructions
 
 ```bash
-# 1. Install workspace dependencies
+# 1. Clone the repository
+git clone https://github.com/shivanggupta618/multi-agent-onboarding.git
+cd multi-agent-onboarding
+
+# 2. Install workspace dependencies
 npm install
 
-# 2. Seed database with synthetic onboarding test cases
+# 3. Seed database with synthetic onboarding test cases
 npm run seed
 
-# 3. Run automated tests (Vitest)
+# 4. Run automated unit, integration & performance test suites (Vitest)
 npm test
 
-# 4. Build TypeScript packages
+# 5. Build TypeScript packages
 npm run build
 
-# 5. Start dev server (API on :3001, Vite React UI on :5173)
+# 6. Start development servers (API on :3001, Vite React UI on :5173 / :5175)
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser to interact with the review console.
+Open `http://localhost:5173` (or the URL printed by Vite) in your browser to interact with the review console.
 
 ---
 
