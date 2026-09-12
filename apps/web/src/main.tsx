@@ -17,7 +17,11 @@ type Workflow = any;
 
 const api = async (path: string, options?: RequestInit) => {
   const r = await fetch(`/api${path}`, options);
-  if (!r.ok) throw new Error((await r.json()).error || 'Request failed');
+  if (!r.ok) {
+    const data = await r.json().catch(() => ({}));
+    const msg = typeof data?.error === 'string' ? data.error : typeof data?.error === 'object' ? JSON.stringify(data.error) : 'Request failed';
+    throw new Error(msg);
+  }
   return r.json();
 };
 
@@ -342,8 +346,8 @@ function Results({ w }: { w: Workflow }) {
             <p>{a.summary}</p>
             {a.findings.length ? (
               <ul>
-                {a.findings.map((f: any) => (
-                  <li key={f.code} className={f.severity}>
+                {a.findings.map((f: any, idx: number) => (
+                  <li key={`${f.code}-${idx}`} className={f.severity}>
                     <strong>[{f.severity}]</strong> {f.message}
                     <small>Evidence: {f.evidence}</small>
                   </li>
@@ -357,8 +361,8 @@ function Results({ w }: { w: Workflow }) {
       </div>
       <article className="rationale">
         <b>Decision Basis & Rationale</b>
-        {r.rationale.map((x: string) => (
-          <p key={x}>• {x}</p>
+        {r.rationale.map((x: string, idx: number) => (
+          <p key={`${x}-${idx}`}>• {x}</p>
         ))}
         <small>Overall Confidence Score: {Math.round(r.confidence * 100)}% · Synthesized by Recommendation Agent</small>
       </article>
