@@ -1,0 +1,15 @@
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import initSqlJs from 'sql.js';
+import type { WorkflowResult, OnboardingCase } from './contracts.js';
+const databasePath = 'onboarding-reviewer.sqlite';
+const SQL = await initSqlJs();
+const db = existsSync(databasePath) ? new SQL.Database(readFileSync(databasePath)) : new SQL.Database();
+db.run(`CREATE TABLE IF NOT EXISTS cases (id TEXT PRIMARY KEY, data TEXT NOT NULL, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS workflows (id TEXT PRIMARY KEY, case_id TEXT NOT NULL, result TEXT NOT NULL, created_at TEXT NOT NULL);`);
+const save = () => writeFileSync(databasePath, db.export());
+const values = (query: string, parameters: (string | number)[] = []) => { const statement = db.prepare(query, parameters); const records: Record<string, unknown>[] = []; while (statement.step()) records.push(statement.getAsObject()); statement.free(); return records; };
+export const storeCase = (c: OnboardingCase) => { db.run('INSERT OR REPLACE INTO cases VALUES (?, ?, ?)', [c.id, JSON.stringify(c), c.createdAt]); save(); };
+export const listCases = (): OnboardingCase[] => values('SELECT data FROM cases ORDER BY created_at DESC').map(r => JSON.parse(r.data as string));
+export const getCase = (id: string): OnboardingCase | undefined => { const r = values('SELECT data FROM cases WHERE id=?', [id])[0]; return r ? JSON.parse(r.data as string) : undefined; };
+export const storeWorkflow = (id: string, result: WorkflowResult) => { db.run('INSERT OR REPLACE INTO workflows VALUES (?, ?, ?, ?)', [id, result.case.id, JSON.stringify(result), new Date().toISOString()]); save(); };
+export const getWorkflow = (id: string): WorkflowResult | undefined => { const r = values('SELECT result FROM workflows WHERE id=?', [id])[0]; return r ? JSON.parse(r.result as string) : undefined; };
